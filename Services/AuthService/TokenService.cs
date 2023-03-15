@@ -1,5 +1,4 @@
 ﻿using Forum_API_Provider.Models.AuthModels;
-using Forum_API_Provider.Models.DbModels;
 using Forum_API_Provider.Models.ForumModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;

@@ -1,4 +1,4 @@
-﻿namespace Forum_API_Provider.Models.DbModels
+﻿namespace Forum_API_Provider.Models.ForumModels
 {
     public class Post
     {

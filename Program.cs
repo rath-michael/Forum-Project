@@ -1,4 +1,4 @@
-using Forum_API_Provider.Models.DbModels;
+using Forum_API_Provider.Models.ForumModels;
 using Forum_API_Provider.Services.AuthService;
 using Forum_API_Provider.Services.ForumService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
