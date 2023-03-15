@@ -4,7 +4,7 @@ namespace Forum_API_Provider.Services.ForumService
 {
     public interface IForumRepository
     {
-        List<Room> GetAllRooms();
-        List<Post> GetAllPosts();
+        Task<List<Room>> GetAllRooms();
+        Task<List<Post>> GetAllPosts();
     }
 }

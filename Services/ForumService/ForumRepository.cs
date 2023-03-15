@@ -1,4 +1,5 @@
 ﻿using Forum_API_Provider.Models.DbModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Forum_API_Provider.Services.ForumService
 {
@@ -9,13 +10,13 @@ namespace Forum_API_Provider.Services.ForumService
         {
             this.context = context;
         }
-        public List<Room> GetAllRooms()
+        public async Task<List<Room>> GetAllRooms()
         {
-            return context.Rooms.ToList();
+            return await context.Rooms.ToListAsync();
         }
-        public List<Post> GetAllPosts()
+        public async Task<List<Post>> GetAllPosts()
         {
-            return context.Posts.ToList();
+            return await context.Posts.ToListAsync();
         }
     }
 }

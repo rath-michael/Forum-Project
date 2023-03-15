@@ -1,4 +1,5 @@
-﻿using Forum_API_Provider.Services.ForumService;
+﻿using Forum_API_Provider.Models.DbModels;
+using Forum_API_Provider.Services.ForumService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,26 +19,16 @@ namespace Forum_API_Provider.Controllers
 
         [HttpGet]
         [Route("GetAllRooms")]
-        public IActionResult GetRooms()
+        public async Task<IActionResult> GetRooms()
         {
-            var rooms = repository.GetAllRooms();
-            if (rooms != null && rooms.Count > 0 )
-            {
-                return Ok(rooms);
-            }
-            return UnprocessableEntity();
+            return Ok(await repository.GetAllRooms());
         }
 
         [HttpGet]
         [Route("GetAllPosts")]
-        public IActionResult GetPosts()
+        public async Task<IActionResult> GetPosts()
         {
-            var posts = repository.GetAllPosts();
-            if (posts != null && posts.Count > 0 ) 
-            { 
-                return Ok(posts); 
-            }
-            return UnprocessableEntity();
+            return Ok(await repository.GetAllPosts());
         }
     }
 }
