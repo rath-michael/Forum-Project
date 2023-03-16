@@ -16,7 +16,7 @@ namespace Forum_API_Provider.Services.ForumService
         // Room
         public async Task<List<Room>> GetAllRooms()
         {
-            return await context.Rooms.ToListAsync();
+            return await context.Rooms.Include(r => r.Posts).ToListAsync();
         }
         public async Task<Room> GetRoom(int roomId)
         {

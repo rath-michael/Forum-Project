@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Forum_API_Provider.Models.ForumModels;
+using Forum_API_Provider.Models.ForumModels.PostResponses;
+using Forum_API_Provider.Models.ForumModels.Posts;
 
 namespace Forum_API_Provider.Models.ForumModels.Users
 {
@@ -19,5 +21,7 @@ namespace Forum_API_Provider.Models.ForumModels.Users
         [Required]
         public string LastName { get; set; }
         public virtual ICollection<RefreshToken> RefreshTokens { get; set; }
+        public virtual ICollection<Post>? Posts { get; set; }
+        public virtual ICollection<PostResponse>? PostResponses { get; set; }
     }
 }

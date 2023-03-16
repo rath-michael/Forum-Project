@@ -1,7 +1,9 @@
 ﻿using Forum_API_Provider.Models.ForumModels.Posts;
+using Forum_API_Provider.Models.ForumModels.PostResponses;
 using Forum_API_Provider.Models.ForumModels.Rooms;
 using Forum_API_Provider.Models.ForumModels.Users;
 using Microsoft.EntityFrameworkCore;
+using Azure;
 
 namespace Forum_API_Provider.Models.ForumModels
 {
@@ -16,10 +18,33 @@ namespace Forum_API_Provider.Models.ForumModels
         public virtual DbSet<Room> Rooms { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
+        public virtual DbSet<PostResponse> Responses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Post>(entity =>
+            {
+                entity.HasOne(r => r.Room)
+                    .WithMany(p => p.Posts)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(u => u.User)
+                    .WithMany(p => p.Posts)
+                    .OnDelete(DeleteBehavior.SetNull);
+            });
+
+            modelBuilder.Entity<PostResponse>(entity =>
+            {
+                entity.HasOne(d => d.Post)
+                    .WithMany(p => p.PostResponses)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.PostResponses)
+                    .OnDelete(DeleteBehavior.SetNull);
+            });
 
             modelBuilder.Entity<User>().HasData(
                 new User
@@ -44,16 +69,16 @@ namespace Forum_API_Provider.Models.ForumModels
                 });
 
             modelBuilder.Entity<Room>().HasData(
-                new Room { RoomId = 1, RoomName = "Room One" },
-                new Room { RoomId = 2, RoomName = "Room Two" },
-                new Room { RoomId = 3, RoomName = "Room Three" }
+                new Room { RoomId = 1, RoomName = "Room One", Description = "Room One Description" },
+                new Room { RoomId = 2, RoomName = "Room Two", Description = "Room Two Description" },
+                new Room { RoomId = 3, RoomName = "Room Three", Description = "Room Three Description" }
                 );
 
             modelBuilder.Entity<Post>().HasData(
-                new Post { PostId = 1, UserId = 1, DatePosted = DateTime.Now, Title = "Test Title One", Message = "Test Message One" },
-                new Post { PostId = 2, UserId = 1, DatePosted = DateTime.Now, Title = "Test Title Two", Message = "Test Message Two" },
-                new Post { PostId = 3, UserId = 1, DatePosted = DateTime.Now, Title = "Test Title Three", Message = "Test Message Three" },
-                new Post { PostId = 4, UserId = 1, DatePosted = DateTime.Now, Title = "Test Title Four", Message = "Test Message Four" }
+                new Post { PostId = 1, RoomId = 1, UserId = 1, DatePosted = DateTime.Now, Title = "Test Title One", Message = "Test Message One" },
+                new Post { PostId = 2, RoomId = 2, UserId = 1, DatePosted = DateTime.Now, Title = "Test Title Two", Message = "Test Message Two" },
+                new Post { PostId = 3, RoomId = 3, UserId = 1, DatePosted = DateTime.Now, Title = "Test Title Three", Message = "Test Message Three" },
+                new Post { PostId = 4, RoomId = 1, UserId = 1, DatePosted = DateTime.Now, Title = "Test Title Four", Message = "Test Message Four" }
                 );
         }
     }
