@@ -1,4 +1,4 @@
-﻿namespace Forum_API_Provider.Models.ForumModels
+﻿namespace Forum_API_Provider.Models.ForumModels.Rooms
 {
     public class Room
     {

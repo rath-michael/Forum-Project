@@ -1,5 +1,6 @@
 ﻿using Forum_API_Provider.Models.AuthModels;
 using Forum_API_Provider.Models.ForumModels;
+using Forum_API_Provider.Models.ForumModels.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;

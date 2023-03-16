@@ -1,4 +1,7 @@
 ﻿using Forum_API_Provider.Models.ForumModels;
+using Forum_API_Provider.Models.ForumModels.Posts;
+using Forum_API_Provider.Models.ForumModels.Rooms;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace Forum_API_Provider.Services.ForumService
@@ -29,31 +32,106 @@ namespace Forum_API_Provider.Services.ForumService
         {
             return await context.Posts.FindAsync(postId);
         }
-        public async Task<Post> AddPost(Post post)
+        public async Task<AddPostResponse> AddPost(Post post)
         {
-            var result = await context.Posts.AddAsync(post);
-            await context.SaveChangesAsync();
-            return result.Entity;
-        }
-        public async Task<Post> UpdatePost(Post post)
-        {
-            var postToUpdate = await context.Posts.FindAsync(post.PostId);
-            if (postToUpdate != null)
-            {
-                postToUpdate.PostId = post.PostId;
-                postToUpdate.UserId = post.UserId;
-                postToUpdate.Title = post.Title;
+            await context.Posts.AddAsync(post);
+            var response = await context.SaveChangesAsync();
 
-                await context.SaveChangesAsync();
-                return postToUpdate;
+            if (response >= 0)
+            {
+                return new AddPostResponse
+                {
+                    Success = true,
+                    Message = "Post successfully added",
+                    Post = post
+                };
             }
 
-            return null;
+            return new AddPostResponse 
+            { 
+                Success = false,
+                Message = "Post add failure"
+            };
         }
-        public async void DeletePost(Post post)
+        public async Task<UpdatePostResponse> UpdatePost(Post post, int userId)
         {
+            var updatedPost = await context.Posts.FindAsync(post.PostId);
+            if (updatedPost == null)
+            {
+                return new UpdatePostResponse
+                {
+                    Success = false,
+                    Message = "Post not found"
+                };
+            }
+
+            if (updatedPost.UserId != userId)
+            {
+                return new UpdatePostResponse
+                {
+                    Success = false,
+                    Message = "You do not have access to update this post"
+                };
+            }
+
+            updatedPost.Title = post.Title;
+            updatedPost.Message = post.Message;
+            var response = await context.SaveChangesAsync();
+
+            if (response >= 0)
+            {
+                return new UpdatePostResponse
+                {
+                    Success = true,
+                    Message = "Post successfully updated",
+                    Post = updatedPost
+                };
+            }
+
+            return new UpdatePostResponse
+            {
+                Success = false,
+                Message = "Unable to update post"
+            };
+        }
+        public async Task<DeletePostResponse> DeletePost(int postId, int userId)
+        {
+            var post = await context.Posts.FindAsync(postId);
+            if (post == null)
+            {
+                return new DeletePostResponse
+                {
+                    Success = false,
+                    Message = "Post not found"
+                };
+            }
+
+            if (post.UserId == userId)
+            {
+                return new DeletePostResponse
+                {
+                    Success = false,
+                    Message = "You don't have access to delete this post"
+                };
+            }
+
             context.Posts.Remove(post);
-            await context.SaveChangesAsync();
+            var response = await context.SaveChangesAsync();
+
+            if (response >= 0)
+            {
+                return new DeletePostResponse
+                {
+                    Success = true,
+                    Message = "Post successfully deleted"
+                };
+            }
+
+            return new DeletePostResponse
+            {
+                Success = false,
+                Message = "Unable to delete post"
+            };
         }
     }
 }

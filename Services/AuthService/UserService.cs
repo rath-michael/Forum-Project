@@ -1,7 +1,6 @@
 ﻿using Forum_API_Provider.Models.AuthModels;
-using Forum_API_Provider.Models.AuthModels.ForumModels;
-using Forum_API_Provider.Models.DbModels;
 using Forum_API_Provider.Models.ForumModels;
+using Forum_API_Provider.Models.ForumModels.Users;
 using Forum_API_Provider.Services.ForumService;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.ModelBinding;

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Forum_API_Provider.Models.ForumModels;
 
-namespace Forum_API_Provider.Models.ForumModels
+namespace Forum_API_Provider.Models.ForumModels.Users
 {
     public class User
     {

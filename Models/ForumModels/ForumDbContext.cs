@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Forum_API_Provider.Models.ForumModels.Posts;
+using Forum_API_Provider.Models.ForumModels.Rooms;
+using Forum_API_Provider.Models.ForumModels.Users;
+using Microsoft.EntityFrameworkCore;
 
 namespace Forum_API_Provider.Models.ForumModels
 {
@@ -47,10 +50,10 @@ namespace Forum_API_Provider.Models.ForumModels
                 );
 
             modelBuilder.Entity<Post>().HasData(
-                new Post { PostId = 1, UserId = 1, Title = "Test Title One" },
-                new Post { PostId = 2, UserId = 1, Title = "Test Title Two" },
-                new Post { PostId = 3, UserId = 1, Title = "Test Title Three" },
-                new Post { PostId = 4, UserId = 1, Title = "Test Title Four" }
+                new Post { PostId = 1, UserId = 1, DatePosted = DateTime.Now, Title = "Test Title One", Message = "Test Message One" },
+                new Post { PostId = 2, UserId = 1, DatePosted = DateTime.Now, Title = "Test Title Two", Message = "Test Message Two" },
+                new Post { PostId = 3, UserId = 1, DatePosted = DateTime.Now, Title = "Test Title Three", Message = "Test Message Three" },
+                new Post { PostId = 4, UserId = 1, DatePosted = DateTime.Now, Title = "Test Title Four", Message = "Test Message Four" }
                 );
         }
     }
