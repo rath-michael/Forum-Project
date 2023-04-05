@@ -60,10 +60,8 @@ namespace Forum_API_Provider.Services.AuthService
             {
                 Email = request.Email,
                 UserName = request.Username,
-                Password = hashedPassword,
-                PasswordSalt = Convert.ToBase64String(passwordSalt),
-                FirstName = request.FirstName,
-                LastName = request.LastName,
+                PasswordHash = hashedPassword,
+                PasswordSalt = Convert.ToBase64String(passwordSalt)
             };
 
             // Save new user to db
@@ -102,7 +100,7 @@ namespace Forum_API_Provider.Services.AuthService
 
             // Check if correct password
             var password = PasswordHelper.GetPasswordHash(request.Password, Convert.FromBase64String(user.PasswordSalt));
-            if (user.Password != password)
+            if (user.PasswordHash != password)
             {
                 return new LoginResponse
                 {

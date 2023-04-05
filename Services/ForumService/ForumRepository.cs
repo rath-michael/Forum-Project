@@ -1,6 +1,7 @@
 ﻿using Forum_API_Provider.Models.ForumModels;
 using Forum_API_Provider.Models.ForumModels.Posts;
 using Forum_API_Provider.Models.ForumModels.Rooms;
+using Forum_API_Provider.Models.ForumModels.Users;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,24 +14,60 @@ namespace Forum_API_Provider.Services.ForumService
         {
             this.context = context;
         }
-        // Room
+
+        #region Room
         public async Task<List<Room>> GetAllRooms()
         {
-            return await context.Rooms.Include(r => r.Posts).ToListAsync();
+            var rooms = await context.Rooms.ToListAsync();
+            foreach (var room in rooms)
+            {
+                room.PostCount = await context.Posts
+                    .Where(p => p.RoomId == room.RoomId)
+                    .CountAsync();
+            }
+            return rooms;
         }
         public async Task<Room> GetRoom(int roomId)
         {
-            return await context.Rooms.FindAsync(roomId);
+            return await context.Rooms
+                .Where(r => r.RoomId == roomId)
+                .SingleOrDefaultAsync();
         }
+        #endregion
 
-        // Post
+
+        #region Post
+        public async Task<Post> GetPost(int postId)
+        {
+            return await context.Posts
+                .Where(p => p.PostId == postId)
+                .SingleOrDefaultAsync();
+        }
         public async Task<List<Post>> GetAllPosts()
         {
             return await context.Posts.ToListAsync();
         }
-        public async Task<Post> GetPost(int postId)
+        public async Task<PostsByRoomResponse> GetPostsByRoom(int roomId)
         {
-            return await context.Posts.FindAsync(postId);
+            var room = await context.Rooms.Where(r => r.RoomId == roomId).SingleOrDefaultAsync();
+            if (room != null)
+            {
+                var posts = await context.Posts.Where(p => p.RoomId == roomId).ToListAsync();
+                var response = new PostsByRoomResponse
+                {
+                    Success = true,
+                    Message = "",
+                    Room = room,
+                    Posts = posts
+                };
+                return response;
+            }
+            return new PostsByRoomResponse { Success = false, Message = "Invalid room" };
+            
+        }
+        public async Task<PostsByUserResponse> GetPostsByUser(int userId)
+        {
+            return null;
         }
         public async Task<AddPostResponse> AddPost(Post post)
         {
@@ -133,5 +170,6 @@ namespace Forum_API_Provider.Services.ForumService
                 Message = "Unable to delete post"
             };
         }
+        #endregion
     }
 }

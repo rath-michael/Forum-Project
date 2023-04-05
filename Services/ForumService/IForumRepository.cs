@@ -5,15 +5,19 @@ namespace Forum_API_Provider.Services.ForumService
 {
     public interface IForumRepository
     {
-        // Room
+        #region Room
         Task<List<Room>> GetAllRooms();
         Task<Room> GetRoom(int roomId);
+        #endregion
 
-        // Post
-        Task<List<Post>> GetAllPosts();
+        #region Post
         Task<Post> GetPost(int postId);
+        Task<List<Post>> GetAllPosts();
+        Task<PostsByRoomResponse> GetPostsByRoom(int roomId);
+        Task<PostsByUserResponse> GetPostsByUser(int userId);
         Task<AddPostResponse> AddPost(Post post);
         Task<UpdatePostResponse> UpdatePost(Post post, int userId);
         Task<DeletePostResponse> DeletePost(int postId, int userId);
+        #endregion
     }
 }

@@ -24,48 +24,22 @@ namespace Forum_API_Provider.Models.ForumModels
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Post>(entity =>
-            {
-                entity.HasOne(r => r.Room)
-                    .WithMany(p => p.Posts)
-                    .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(u => u.User)
-                    .WithMany(p => p.Posts)
-                    .OnDelete(DeleteBehavior.SetNull);
-            });
-
-            modelBuilder.Entity<PostResponse>(entity =>
-            {
-                entity.HasOne(d => d.Post)
-                    .WithMany(p => p.PostResponses)
-                    .OnDelete(DeleteBehavior.Cascade);
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.PostResponses)
-                    .OnDelete(DeleteBehavior.SetNull);
-            });
-
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
                     UserId = 1,
                     Email = "mike@mail.com",
                     UserName = "MRath",
-                    Password = "KMLunUSx3gqyO3LdhJr/H6aRnKLXN7mf24Z/QHVuyYk=",
-                    PasswordSalt = "8OfcirkrYBrwkCJa9BTogihr7XTVhLqqPcQ6PnUdKX0=",
-                    FirstName = "mike",
-                    LastName = "rath"
+                    PasswordHash = "KMLunUSx3gqyO3LdhJr/H6aRnKLXN7mf24Z/QHVuyYk=",
+                    PasswordSalt = "8OfcirkrYBrwkCJa9BTogihr7XTVhLqqPcQ6PnUdKX0="
                 },
                 new User
                 {
                     UserId = 2,
                     Email = "josh@mail.com",
                     UserName = "JMarks",
-                    Password = "KMLunUSx3gqyO3LdhJr/H6aRnKLXN7mf24Z/QHVuyYk=",
-                    PasswordSalt = "8OfcirkrYBrwkCJa9BTogihr7XTVhLqqPcQ6PnUdKX0=",
-                    FirstName = "josh",
-                    LastName = "marks"
+                    PasswordHash = "KMLunUSx3gqyO3LdhJr/H6aRnKLXN7mf24Z/QHVuyYk=",
+                    PasswordSalt = "8OfcirkrYBrwkCJa9BTogihr7XTVhLqqPcQ6PnUdKX0="
                 });
 
             modelBuilder.Entity<Room>().HasData(

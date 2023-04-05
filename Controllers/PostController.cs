@@ -1,8 +1,6 @@
 ﻿using Forum_API_Provider.Models.ForumModels.Posts;
 using Forum_API_Provider.Services.ForumService;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 
 namespace Forum_API_Provider.Controllers
 {
@@ -23,6 +21,23 @@ namespace Forum_API_Provider.Controllers
         {
             return Ok(await repository.GetAllPosts());
         }
+
+        [HttpGet]
+        [Route("GetPostByRoom")]
+        public async Task<IActionResult> GetPostsByRoom(int roomId)
+        {
+            var room = await repository.GetRoom(roomId);
+            if (room != null)
+            {
+                return Ok(await repository.GetPostsByRoom(roomId));
+            }
+            return NotFound();
+        }
+
+
+
+
+
         // Get
         [HttpGet]
         [Route("GetPost/{postId}")]
