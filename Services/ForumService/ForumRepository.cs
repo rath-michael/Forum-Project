@@ -4,6 +4,7 @@ using Forum_API_Provider.Models.ForumModels.Rooms;
 using Forum_API_Provider.Models.ForumModels.Users;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace Forum_API_Provider.Services.ForumService
 {
@@ -35,7 +36,6 @@ namespace Forum_API_Provider.Services.ForumService
         }
         #endregion
 
-
         #region Post
         public async Task<Post> GetPost(int postId)
         {
@@ -47,27 +47,29 @@ namespace Forum_API_Provider.Services.ForumService
         {
             return await context.Posts.ToListAsync();
         }
-        public async Task<PostsByRoomResponse> GetPostsByRoom(int roomId)
+        public async Task<PostsByRoomResponse> GetPostsByRoom(Room room)
         {
-            var room = await context.Rooms.Where(r => r.RoomId == roomId).SingleOrDefaultAsync();
-            if (room != null)
+            var posts = await context.Posts.Where(p => p.RoomId == room.RoomId).ToListAsync();
+            var response = new PostsByRoomResponse
             {
-                var posts = await context.Posts.Where(p => p.RoomId == roomId).ToListAsync();
-                var response = new PostsByRoomResponse
-                {
-                    Success = true,
-                    Message = "",
-                    Room = room,
-                    Posts = posts
-                };
-                return response;
-            }
-            return new PostsByRoomResponse { Success = false, Message = "Invalid room" };
-            
+                Success = true,
+                Message = "",
+                Room = room,
+                Posts = posts
+            };
+            return response;
         }
-        public async Task<PostsByUserResponse> GetPostsByUser(int userId)
+        public async Task<PostsByUserResponse> GetPostsByUser(User user)
         {
-            return null;
+            var posts = await context.Posts.Where(p => p.UserId == user.UserId).ToListAsync();
+            var response = new PostsByUserResponse
+            {
+                Success = true,
+                Message = "",
+                User = user,
+                Posts = posts
+            };
+            return response;
         }
         public async Task<AddPostResponse> AddPost(Post post)
         {
@@ -169,6 +171,13 @@ namespace Forum_API_Provider.Services.ForumService
                 Success = false,
                 Message = "Unable to delete post"
             };
+        }
+        #endregion
+
+        #region User
+        public async Task<User> GetUser(int userId)
+        {
+            return await context.Users.SingleOrDefaultAsync(u => u.UserId == userId);
         }
         #endregion
     }

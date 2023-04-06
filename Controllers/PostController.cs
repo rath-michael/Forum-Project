@@ -23,18 +23,28 @@ namespace Forum_API_Provider.Controllers
         }
 
         [HttpGet]
-        [Route("GetPostByRoom")]
+        [Route("GetPostByRoom/{roomId}")]
         public async Task<IActionResult> GetPostsByRoom(int roomId)
         {
             var room = await repository.GetRoom(roomId);
             if (room != null)
             {
-                return Ok(await repository.GetPostsByRoom(roomId));
+                return Ok(await repository.GetPostsByRoom(room));
             }
             return NotFound();
         }
 
-
+        [HttpGet]
+        [Route("GetPostsByUser/{userId}")]
+        public async Task<IActionResult> GetPostsByUser(int userId)
+        {
+            var user = await repository.GetUser(userId);
+            if (user != null)
+            {
+                return Ok(await repository.GetPostsByUser(user));
+            }
+            return NotFound();
+        }
 
 
 

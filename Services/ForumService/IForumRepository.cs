@@ -1,5 +1,6 @@
 ﻿using Forum_API_Provider.Models.ForumModels.Posts;
 using Forum_API_Provider.Models.ForumModels.Rooms;
+using Forum_API_Provider.Models.ForumModels.Users;
 
 namespace Forum_API_Provider.Services.ForumService
 {
@@ -13,11 +14,15 @@ namespace Forum_API_Provider.Services.ForumService
         #region Post
         Task<Post> GetPost(int postId);
         Task<List<Post>> GetAllPosts();
-        Task<PostsByRoomResponse> GetPostsByRoom(int roomId);
-        Task<PostsByUserResponse> GetPostsByUser(int userId);
+        Task<PostsByRoomResponse> GetPostsByRoom(Room room);
+        Task<PostsByUserResponse> GetPostsByUser(User user);
         Task<AddPostResponse> AddPost(Post post);
         Task<UpdatePostResponse> UpdatePost(Post post, int userId);
         Task<DeletePostResponse> DeletePost(int postId, int userId);
+        #endregion
+
+        #region User
+        Task<User> GetUser(int userId);
         #endregion
     }
 }
