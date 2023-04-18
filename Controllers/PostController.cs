@@ -1,6 +1,8 @@
 ﻿using Forum_API_Provider.Models.ForumModels.Posts;
 using Forum_API_Provider.Services.ForumService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Forum_API_Provider.Controllers
 {
@@ -21,7 +23,7 @@ namespace Forum_API_Provider.Controllers
         {
             return Ok(await repository.GetAllPosts());
         }
-
+        // Get posts associated with specific room
         [HttpGet]
         [Route("GetPostByRoom/{roomId}")]
         public async Task<IActionResult> GetPostsByRoom(int roomId)
@@ -31,9 +33,9 @@ namespace Forum_API_Provider.Controllers
             {
                 return Ok(await repository.GetPostsByRoom(room));
             }
-            return NotFound();
+            return NoContent();
         }
-
+        // Get posts associated with specific user
         [HttpGet]
         [Route("GetPostsByUser/{userId}")]
         public async Task<IActionResult> GetPostsByUser(int userId)
@@ -43,11 +45,8 @@ namespace Forum_API_Provider.Controllers
             {
                 return Ok(await repository.GetPostsByUser(user));
             }
-            return NotFound();
+            return NoContent();
         }
-
-
-
         // Get
         [HttpGet]
         [Route("GetPost/{postId}")]
@@ -60,12 +59,18 @@ namespace Forum_API_Provider.Controllers
             }
             return NoContent();
         }
-        // Add - Post
+        // Post
+        [Authorize]
         [HttpPost]
         [Route("AddPost")]
         public async Task<IActionResult> AddPost(AddPostRequest request)
         {
-            var post = new Post { UserId = UserID, DatePosted = DateTime.Now, Title = request.Title, Message = request.Message };
+            var post = new Post { 
+                UserId = UserID, 
+                DatePosted = DateTime.Now, 
+                Title = request.Title, 
+                Message = request.Message 
+            };
             var response = await repository.AddPost(post);
 
             if (response.Success)
@@ -74,35 +79,59 @@ namespace Forum_API_Provider.Controllers
             }
             return UnprocessableEntity(response);
         }
-        // Update - Put
+        // Put
+        [Authorize]
         [HttpPut]
         [Route("UpdatePost")]
-        public async Task<IActionResult> UpdatePost(Post post)
+        public async Task<IActionResult> UpdatePost(Post originalPost)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var updatedPost = await repository.UpdatePost(post, UserID);
-            if (updatedPost.Success)
+            var updatedPost = await repository.GetPost(originalPost.PostId);
+            if (updatedPost == null)
+            {
+                return NotFound();
+            }
+
+            if (updatedPost.UserId != UserID)
+            {
+                return Unauthorized();
+            }
+
+            var response = await repository.UpdatePost(updatedPost, originalPost);
+            if (response.Success)
             {
                 return Ok(updatedPost);
             }
-            return UnprocessableEntity(updatedPost);
+            return UnprocessableEntity(originalPost);
         }
         // Delete
+        [Authorize]
         [HttpDelete]
         [Route("Delete/{postId}")]
         public async Task<IActionResult> DeletePost(int postId)
         {
-            var deleteAttempt = await repository.DeletePost(postId, UserID);
-
-            if (deleteAttempt.Success)
+            var postToDelete = await repository.GetPost(postId);
+            if (postToDelete == null)
             {
-                return Ok(deleteAttempt);
+                return NotFound();
             }
-            return UnprocessableEntity(deleteAttempt);
+
+            if (postToDelete.UserId != UserID)
+            {
+                return Unauthorized();
+            }
+
+            var response = await repository.DeletePost(postToDelete);
+            if (response.Success)
+            {
+                return Ok(response);
+            }
+
+            return UnprocessableEntity();
         }
     }
 }

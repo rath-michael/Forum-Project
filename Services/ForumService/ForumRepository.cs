@@ -92,29 +92,10 @@ namespace Forum_API_Provider.Services.ForumService
                 Message = "Post add failure"
             };
         }
-        public async Task<UpdatePostResponse> UpdatePost(Post post, int userId)
+        public async Task<UpdatePostResponse> UpdatePost(Post updatedPost, Post originalPost)
         {
-            var updatedPost = await context.Posts.FindAsync(post.PostId);
-            if (updatedPost == null)
-            {
-                return new UpdatePostResponse
-                {
-                    Success = false,
-                    Message = "Post not found"
-                };
-            }
-
-            if (updatedPost.UserId != userId)
-            {
-                return new UpdatePostResponse
-                {
-                    Success = false,
-                    Message = "You do not have access to update this post"
-                };
-            }
-
-            updatedPost.Title = post.Title;
-            updatedPost.Message = post.Message;
+            updatedPost.Title = originalPost.Title;
+            updatedPost.Message = originalPost.Message;
             var response = await context.SaveChangesAsync();
 
             if (response >= 0)
@@ -133,27 +114,8 @@ namespace Forum_API_Provider.Services.ForumService
                 Message = "Unable to update post"
             };
         }
-        public async Task<DeletePostResponse> DeletePost(int postId, int userId)
+        public async Task<DeletePostResponse> DeletePost(Post post)
         {
-            var post = await context.Posts.FindAsync(postId);
-            if (post == null)
-            {
-                return new DeletePostResponse
-                {
-                    Success = false,
-                    Message = "Post not found"
-                };
-            }
-
-            if (post.UserId == userId)
-            {
-                return new DeletePostResponse
-                {
-                    Success = false,
-                    Message = "You don't have access to delete this post"
-                };
-            }
-
             context.Posts.Remove(post);
             var response = await context.SaveChangesAsync();
 

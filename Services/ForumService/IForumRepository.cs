@@ -17,8 +17,8 @@ namespace Forum_API_Provider.Services.ForumService
         Task<PostsByRoomResponse> GetPostsByRoom(Room room);
         Task<PostsByUserResponse> GetPostsByUser(User user);
         Task<AddPostResponse> AddPost(Post post);
-        Task<UpdatePostResponse> UpdatePost(Post post, int userId);
-        Task<DeletePostResponse> DeletePost(int postId, int userId);
+        Task<UpdatePostResponse> UpdatePost(Post updatedPost, Post originalPost);
+        Task<DeletePostResponse> DeletePost(Post post);
         #endregion
 
         #region User
