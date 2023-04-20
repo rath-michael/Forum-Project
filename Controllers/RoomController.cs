@@ -1,4 +1,6 @@
-﻿using Forum_API_Provider.Services.ForumService;
+﻿using Forum_API_Provider.Models.ForumModels.Rooms;
+using Forum_API_Provider.Services.ForumService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,7 +35,28 @@ namespace Forum_API_Provider.Controllers
             return NotFound();
         }
         // Add
+        [Authorize]
+        [HttpPost]
+        [Route("AddRoom")]
+        public async Task<IActionResult> AddRoom(Room room)
+        {
+            return Ok();
+        }
         // Update
+        [Authorize]
+        [HttpPut]
+        [Route("UpdateRoom")]
+        public async Task<IActionResult> UpdateRoom(Room originalRoom)
+        {
+            return Ok();
+        }
         // Delete
+        [Authorize]
+        [HttpDelete]
+        [Route("Delete/{roomId}")]
+        public async Task<IActionResult> DeleteRoom(int roomId)
+        {
+            return Ok();
+        }
     }
 }
