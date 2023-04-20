@@ -9,6 +9,9 @@ namespace Forum_API_Provider.Services.ForumService
         #region Room
         Task<List<Room>> GetAllRooms();
         Task<Room> GetRoom(int roomId);
+        Task<bool> AddRoom(AddRoomRequest request);
+        Task<bool> UpdateRoom(Room room);
+        Task<bool> DeleteRoom(int roomId);
         #endregion
 
         #region Post

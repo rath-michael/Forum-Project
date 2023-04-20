@@ -34,6 +34,18 @@ namespace Forum_API_Provider.Services.ForumService
                 .Where(r => r.RoomId == roomId)
                 .SingleOrDefaultAsync();
         }
+        public async Task<bool> AddRoom(AddRoomRequest request)
+        {
+            return true;
+        }
+        public async Task<bool> UpdateRoom(Room room)
+        {
+            return true;
+        }
+        public async Task<bool> DeleteRoom(int roomId)
+        {
+            return true;
+        }
         #endregion
 
         #region Post

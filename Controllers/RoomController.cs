@@ -38,7 +38,7 @@ namespace Forum_API_Provider.Controllers
         [Authorize]
         [HttpPost]
         [Route("AddRoom")]
-        public async Task<IActionResult> AddRoom(Room room)
+        public async Task<IActionResult> AddRoom(AddRoomRequest request)
         {
             return Ok();
         }
