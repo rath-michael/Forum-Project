@@ -40,6 +40,12 @@ namespace Forum_API_Provider.Controllers
         [Route("AddRoom")]
         public async Task<IActionResult> AddRoom(AddRoomRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(request);
+            }
+
+
             return Ok();
         }
         // Update
@@ -48,6 +54,18 @@ namespace Forum_API_Provider.Controllers
         [Route("UpdateRoom")]
         public async Task<IActionResult> UpdateRoom(Room originalRoom)
         {
+            if (!ModelState.IsValid)
+            {
+                return UnprocessableEntity(originalRoom);
+            }
+
+            var updatedRoom = await repository.GetRoom(originalRoom.RoomId);
+            if (updatedRoom == null)
+            {
+                return NotFound();
+            }
+
+
             return Ok();
         }
         // Delete
